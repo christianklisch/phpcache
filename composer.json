@@ -3,7 +3,7 @@
     "description": "A simple PHP caching class",
     "keywords": ["php","cache"],
     "homepage": "https://github.com/christianklisch/phpcache",
-    "authors": [
+    "authors": [{
             "name": "Christian Klisch",
             "homepage": "http://www.christian-klisch.de/"
         }
