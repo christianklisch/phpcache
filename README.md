@@ -142,4 +142,4 @@ $c->clearCache();
 
 ## Copyright and license
 
-Copyright 2013 Christian Klisch, released under [the Apache](LICENSE).
+Copyright 2013 Christian Klisch, released under [the Apache](LICENSE) license.

@@ -1,14 +1,14 @@
 {
     "name": "christianklisch/phpcache",
     "description": "A simple PHP caching class",
-    "keywords": "php","cache"],
+    "keywords": ["php","cache"],
+    "homepage": "https://github.com/christianklisch/phpcache",
     "authors": [
             "name": "Christian Klisch",
             "homepage": "http://www.christian-klisch.de/"
         }
     ],
     "license": "Apache 2.0",
-    "homepage": "http://www.christian-klisch.de",
     "autoload": {
         "files": ["PHPCache.class.php"]
     }
