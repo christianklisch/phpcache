@@ -52,7 +52,7 @@ Then cache an primitive data type with:
 $myString = $c->cacheVal('String to cache','cachingID');
 ```
 
-This will cache the string of the first parameter into a file named by second parameter. Use the second parameter setting filename for primitive data types.
+This will cache the string of the first parameter into a file named by second parameter. Use the second parameter setting key for primitive data types.
 
 
 ### Object data type
@@ -64,7 +64,7 @@ $myObj = new FooBar();
 $obj = $c->cacheVal(myObj, myObj->getId());
 ```
 
-This will cache the object in the first parameter into a file named by second parameter. Use the second parameter setting id as filename for object cache.
+This will cache the object in the first parameter into a file named by second parameter. Use the second parameter setting key as filename for object cache.
 
 ### Object data type with automatic ID-getter
 
