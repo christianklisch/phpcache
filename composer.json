@@ -11,7 +11,7 @@
     "license": "Apache 2.0",
     "autoload": {
         "files": ["PHPCache.class.php"]
-    }
+    },
     "require": {
         "php": ">=5.3.0"
     }    
