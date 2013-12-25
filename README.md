@@ -31,7 +31,7 @@ This is currently the first release of PHPCache, so in this example you'll be ab
 Include the script in your project either with Composer or via the manual `require` method and create a new instance of the class, using the appropriate parameters if needed:
 
 ```php
-$image = new PHPCache();
+$c = new PHPCache();
 ```
 
 Possible parameters include:
@@ -88,16 +88,18 @@ Now the objects id is automatically determined by PHPCache logic. Caching config
 
 ### Check for cached data
 
-Check with the given ID if data is cached. Can be used to call a new cacheVal().
+Check with the given key if data is cached. Can be used to call a new cacheVal().
 
 ```php
 /**
- * check, if id or object in first parameter is cached. Returns true, if cached
+ * check, if key or object in first parameter is cached. Returns true, if cached
  * @return bool
  */
 
-if($c->isCached($id))
-    $obj = $c->cacheVal(myObj, $id);    
+if($c->isCached($key))
+    $obj = $c->cacheVal(myObj, $key);  
+else
+    $obj = $logic->calcVal($key);  
 ```
 
 ### Cache whole function calls

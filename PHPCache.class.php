@@ -54,8 +54,8 @@ class PHPCache {
      * @param  array $settings Associative array of caching settings
      */
     public function __construct($settings = array()) {
-	// Setup caching
-	$this->settings = array_merge(static::getDefaultSettings(), $settings);
+        // Setup caching
+        $this->settings = array_merge(static::getDefaultSettings(), $settings);
     }
 
     /**
@@ -63,22 +63,23 @@ class PHPCache {
      * @return array
      */
     public static function getDefaultSettings() {
-	return array(
-	    // directory
-	    'cacheDir' => 'cache',
-	    // caching time in seconds
-	    'cacheTime' => '60',
-	    // Debugging
-	    'debug' => true
-	);
+        return array(
+            // directory
+            'cacheDir' => 'cache',
+            // caching time in seconds
+            'cacheTime' => '60',
+            // Debugging
+            'debug' => true
+        );
     }
 
     /**
      * Read and Write config
+     * @param  $name setting name     
      * @return string     
      */
     public function getConfig($name) {
-	return isset($this->settings[$name]) ? $this->settings[$name] : null;
+        return isset($this->settings[$name]) ? $this->settings[$name] : null;
     }
 
     /**
@@ -86,7 +87,7 @@ class PHPCache {
      * @param  array $primkeys Associative array of class primary-key-function
      */
     public function setPrimaryKeys($primkeys = array()) {
-	$this->primarykeys = $primkeys;
+        $this->primarykeys = $primkeys;
     }
 
     /*     * ******************************************************************************
@@ -95,125 +96,132 @@ class PHPCache {
 
     /**
      * get cached value in time or return value
+     * @param $value value or object to cache     
+     * @param $id key for cache
      * @return object     
      */
     public function cacheVal($value, $id = null) {
-	if ($id == null) {
-	    $id = $this->getIDfromOjb($value);
+        if ($id == null) {
+            if (is_object($value))
+                $id = $this->getIDfromOjb($value);
 
-	    if ($id == null && $this->getConfig('debug')) {
-		echo "no caching id";
-		return $value;
-	    }
-	}
+            if ($id == null && $this->getConfig('debug')) {
+                echo "no caching key";
+                return $value;
+            }
+        }
 
-	$cachefile = $this->getConfig('cacheDir') . '/' . $id;
-	$cachetime = $this->getConfig('cacheTime');
+        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachetime = $this->getConfig('cacheTime');
 
-	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
-	    $ser = file_get_contents($cachefile);
-	    $val = unserialize($ser);
-	    return $val;
-	} else {
-	    $ser = serialize($value);
-	    file_put_contents($cachefile, $ser);
-	    return $value;
-	}
+        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+            $ser = file_get_contents($cachefile);
+            $val = unserialize($ser);
+            return $val;
+        } else {
+            $ser = serialize($value);
+            file_put_contents($cachefile, $ser);
+            return $value;
+        }
 
-	if ($this->getConfig('debug'))
-	    echo "no caching";
+        if ($this->getConfig('debug'))
+            echo "no caching";
     }
 
     /**
      * cache function result and return it
+     * @param $function closure to cache 
      * @return object     
      */
     public function cacheFun($function) {
-	if ($this->getConfig('debug') && !is_callable($function))
-	    echo "no valid function";
+        if ($this->getConfig('debug') && !is_callable($function))
+            echo "no valid function";
 
-	$r = new ReflectionFunction($function);
-	$id = null;
+        $r = new ReflectionFunction($function);
+        $id = null;
 
-	foreach ($r->getStaticVariables() as $key => $var) {
-	    if ($key == 'key')
-		$id = $var;
-	}
+        foreach ($r->getStaticVariables() as $key => $var) {
+            if ($key == 'key')
+                $id = $var;
+        }
 
-	if (is_object($id))
-	    $id = $this->getIDfromOjb($id);
+        if (is_object($id))
+            $id = $this->getIDfromOjb($id);
 
-	if ($id == null && $this->getConfig('debug')) {
-	    echo "no caching id";
-	    return $function();
-	}
+        if ($id == null && $this->getConfig('debug')) {
+            echo "no caching key";
+            return $function();
+        }
 
-	$cachefile = $this->getConfig('cacheDir') . '/' . $id;
-	$cachetime = $this->getConfig('cacheTime');
+        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachetime = $this->getConfig('cacheTime');
 
-	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
-	    $ser = file_get_contents($cachefile);
-	    $val = unserialize($ser);
-	    return $val;
-	} else {
-	    $value = $function();
-	    $ser = serialize($value);
-	    file_put_contents($cachefile, $ser);
-	    return $value;
-	}
+        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+            $ser = file_get_contents($cachefile);
+            $val = unserialize($ser);
+            return $val;
+        } else {
+            $value = $function();
+            $ser = serialize($value);
+            file_put_contents($cachefile, $ser);
+            return $value;
+        }
 
-	if ($this->getConfig('debug'))
-	    echo "no caching";
+        if ($this->getConfig('debug'))
+            echo "no caching";
     }
 
     /**
-     * check, if id or object in first parameter is cached. Returns true, if cached
+     * check, if key or object in first parameter is cached. Returns true, if cached
+     * @param $id key of cached object or value     
      * @return bool
      */
     public function isCached($id) {
-	if ($id != null) {
-	    $id = $this->getIDfromOjb($id);
-	}
+        if ($id != null) {
+            $id = $this->getIDfromOjb($id);
+        }
 
-	if ($id == null)
-	    return false;
+        if ($id == null)
+            return false;
 
-	$cachefile = $this->getConfig('cacheDir') . '/' . $id;
-	$cachetime = $this->getConfig('cacheTime');
+        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachetime = $this->getConfig('cacheTime');
 
-	if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
-	    return true;
-	}
+        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+            return true;
+        }
 
-	return false;
+        return false;
     }
 
     /**
-     * get id from object $value
-     * @return id     
+     * get key from object $value
+     * @param $value object getting key from
+     * @return key     
      */
     private function getIDfromOjb($value) {
-	$id = null;
-	if ($this->primarykeys) {
-	    foreach ($this->primarykeys as $key => $function) {
-		if (is_subclass_of($value, $key) || is_a($value, $key)) {
-		    $id = $value->$function();
-		    break;
-		}
-	    }
-	}
-	return $id;
+        $id = null;
+        if ($this->primarykeys) {
+            foreach ($this->primarykeys as $key => $function) {
+                if (is_subclass_of($value, $key) || is_a($value, $key)) {
+                    $id = $value->$function();
+                    break;
+                }
+            }
+        }
+        return $id;
     }
 
     /**
      * delete all cached files 
      */
     public function clearCache() {
-	$files = glob($this->getConfig('cacheDir') . '/*', GLOB_MARK);
-	foreach ($files as $file) {
-	    unlink($file);
-	}
+        $files = glob($this->getConfig('cacheDir') . '/*', GLOB_MARK);
+        foreach ($files as $file) {
+            unlink($file);
+        }
     }
+
 }
 
 ?>
