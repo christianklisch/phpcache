@@ -4,15 +4,15 @@
  * PHPCache - a PHP caching class
  *
  * @author      Christian Klisch <info@christian-klisch.de>
- * @copyright   2013 Christian Klisch
+ * @copyright   2014 Christian Klisch
  * @link        https://github.com/christianklisch/phpcache
  * @license     https://github.com/christianklisch/phpcache/LICENSE
- * @version     0.1.0
+ * @version     0.1.1
  * @package     PHPCache
  *
  * APACHE LICENSE 
  * 
- * Copyright (c) 2013 Christian Klisch    
+ * Copyright (c) 2014 Christian Klisch    
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,11 +65,11 @@ class PHPCache {
     public static function getDefaultSettings() {
         return array(
             // directory
-            'cacheDir' => 'cache',
+            'cacheDir' => 'cache/phpcache',
             // caching time in seconds
-            'cacheTime' => '60',
+            'cacheTime' => '360',
             // Debugging
-            'debug' => true
+            'debug' => false
         );
     }
 
@@ -111,15 +111,15 @@ class PHPCache {
             }
         }
 
-        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachefile = $this->getConfig('cacheDir') . '/' . utf8_decode($id);
         $cachetime = $this->getConfig('cacheTime');
 
-        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+        if (file_exists($cachefile) && time() - $cachetime < fileatime($cachefile)) {
             $ser = file_get_contents($cachefile);
-            $val = unserialize($ser);
+            $val = bzdecompress(unserialize($ser));
             return $val;
         } else {
-            $ser = serialize($value);
+            $ser = bzcompress(serialize($value));
             file_put_contents($cachefile, $ser);
             return $value;
         }
@@ -153,16 +153,16 @@ class PHPCache {
             return $function();
         }
 
-        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachefile = $this->getConfig('cacheDir') . '/' . utf8_decode($id);
         $cachetime = $this->getConfig('cacheTime');
 
-        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+        if (file_exists($cachefile) && time() - $cachetime < fileatime($cachefile)) {
             $ser = file_get_contents($cachefile);
-            $val = unserialize($ser);
+            $val = bzdecompress(unserialize($ser));
             return $val;
         } else {
             $value = $function();
-            $ser = serialize($value);
+            $ser = serialize(bzcompress($value));
             file_put_contents($cachefile, $ser);
             return $value;
         }
@@ -184,10 +184,10 @@ class PHPCache {
         if ($id == null)
             return false;
 
-        $cachefile = $this->getConfig('cacheDir') . '/' . $id;
+        $cachefile = $this->getConfig('cacheDir') . '/' . utf8_decode($id);
         $cachetime = $this->getConfig('cacheTime');
 
-        if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+        if (file_exists($cachefile) && time() - $cachetime < fileatime($cachefile)) {
             return true;
         }
 
@@ -221,6 +221,18 @@ class PHPCache {
             unlink($file);
         }
     }
+              
+    /**        
+     * delete old cached files 
+     */
+    public function gc() {
+        $files = glob($this->getConfig('cacheDir') . '/*', GLOB_MARK);
+        $cachetime = $this->getConfig('cacheTime');
+        foreach ($files as $file) {
+            if(time() - $cachetime > fileatime($file))
+                unlink($file);
+        }
+    }    
 
 }
 

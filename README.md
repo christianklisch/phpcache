@@ -1,4 +1,4 @@
-# PHPCache v. 0.1.0
+# PHPCache v. 0.1.1
 
 PHPCache is a simple file based object cache, caching big or complex calculated data in filesystem. 
 
@@ -21,7 +21,7 @@ Features:
 You can either install the script manually using the `require` method:
 
 ```php
-require 'PHPCache.php';
+require 'PHPCache.class.php';
 ```
 
 This is currently the first release of PHPCache, so in this example you'll be able to update your script with any updates made to PHPCache.
@@ -31,13 +31,13 @@ This is currently the first release of PHPCache, so in this example you'll be ab
 Include the script in your project either with Composer or via the manual `require` method and create a new instance of the class, using the appropriate parameters if needed:
 
 ```php
-$c = new PHPCache();
+$cache = new PHPCache();
 ```
 
 Possible parameters include:
 
 ```php
-$c = new PHPCache\PHPCache(
+$cache = new PHPCache(
 	array($debug = true, $cacheDir = 'cache', $cacheTime = 10)
 );
 /**
@@ -49,7 +49,7 @@ $c = new PHPCache\PHPCache(
 Then cache an primitive data type with:
 
 ```php
-$myString = $c->cacheVal('String to cache','cachingID');
+$myString = $cache->cacheVal('String to cache','cachingID');
 ```
 
 This will cache the string of the first parameter into a file named by second parameter. Use the second parameter setting key for primitive data types.
@@ -61,7 +61,7 @@ Cache an object data type with:
 
 ```php
 $myObj = new FooBar();
-$obj = $c->cacheVal(myObj, myObj->getId());
+$obj = $cache->cacheVal(myObj, myObj->getId());
 ```
 
 This will cache the object in the first parameter into a file named by second parameter. Use the second parameter setting key as filename for object cache.
@@ -77,11 +77,11 @@ $myObj = new FooBar();
  * Setting get-functions for primary keys of classes
  * @param  array $primkeys Associative array of class primary-key-function
  */
-$c->setPrimaryKeys(array(
+$cache->setPrimaryKeys(array(
     'FooBar' => 'getId'
 ));
 
-$obj = $c->cacheVal(myObj);
+$obj = $cache->cacheVal(myObj);
 ```
 
 Now the objects id is automatically determined by PHPCache logic. Caching configuration is 
@@ -96,7 +96,7 @@ Check with the given key if data is cached. Can be used to call a new cacheVal()
  * @return bool
  */
 
-if($c->isCached($key))
+if($cache->isCached($key))
     $obj = $c->cacheVal(myObj, $key);  
 else
     $obj = $logic->calcVal($key);  
@@ -134,7 +134,7 @@ Delete all cached data in caching directory with:
 /**
  * delete all cached files 
  */    
-$c->clearCache();
+$cache->clearCache();
 ```
 
 ## Contributors
@@ -144,4 +144,4 @@ $c->clearCache();
 
 ## Copyright and license
 
-Copyright 2013 Christian Klisch, released under [the Apache](LICENSE) license.
+Copyright 2014 Christian Klisch, released under [the Apache](LICENSE) license.
