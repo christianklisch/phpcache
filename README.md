@@ -14,6 +14,7 @@ Features:
 * Can be used with every variable / data (except. templates)
 * Load data from cache or determine new data
 * Clear caching directory
+* Garbage collector
 
 
 ## Installation
