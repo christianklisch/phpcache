@@ -1,4 +1,4 @@
-# PHPCache v. 0.1.1
+# PHPCache v. 0.1.2
 
 PHPCache is a simple file based object cache, caching big or complex calculated data in filesystem. 
 
@@ -97,7 +97,7 @@ Check with the given key if data is cached. Can be used to call a new cacheVal()
  */
 
 if($cache->isCached($key))
-    $obj = $c->cacheVal(myObj, $key);  
+    $obj = $cache->cacheVal(myObj, $key);  
 else
     $obj = $logic->calcVal($key);  
 ```
@@ -124,6 +124,18 @@ echo "result: ".$result;
 ```
 
 Please don't use function parametes. Submit your variables via the use()-keyword. It is important using one parameter named 'key' for caching. The name and count of other parameters is not important. Write the call of your complex logic inside the anonymous function. This code will be called, if your key isn't found in cache.
+
+### Delete old cached data
+
+Delete old cached data in caching directory with:
+ 
+```php
+/**
+ * delete old cached files 
+ */    
+$cache->gc();
+```
+Garbage Collector is not called automatically.
 
 
 ### Clear caching directory
