@@ -62,7 +62,7 @@ Cache an object data type with:
 
 ```php
 $myObj = new FooBar();
-$obj = $cache->cacheVal(myObj, myObj->getId());
+$obj = $cache->cacheVal($myObj, $myObj->getId());
 ```
 
 This will cache the object in the first parameter into a file named by second parameter. Use the second parameter setting key as filename for object cache.
@@ -82,7 +82,7 @@ $cache->setPrimaryKeys(array(
     'FooBar' => 'getId'
 ));
 
-$obj = $cache->cacheVal(myObj);
+$obj = $cache->cacheVal($myObj);
 ```
 
 Now the objects id is automatically determined by PHPCache logic. Caching configuration is 
@@ -98,7 +98,7 @@ Check with the given key if data is cached. Can be used to call a new cacheVal()
  */
 
 if($cache->isCached($key))
-    $obj = $cache->cacheVal(myObj, $key);  
+    $obj = $cache->cacheVal($myObj, $key);  
 else
     $obj = $logic->calcVal($key);  
 ```

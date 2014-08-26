@@ -7,7 +7,7 @@
  * @copyright   2014 Christian Klisch
  * @link        https://github.com/christianklisch/phpcache
  * @license     https://github.com/christianklisch/phpcache/LICENSE
- * @version     0.1.1
+ * @version     0.1.2
  * @package     PHPCache
  *
  * APACHE LICENSE 
