@@ -25,6 +25,13 @@ You can either install the script manually using the `require` method:
 require 'PHPCache.class.php';
 ```
 
+or use the composer:
+```
+    "require": {
+        "christianklisch/phpcache": "0.1.2"
+    }
+```
+
 This is currently the first release of PHPCache, so in this example you'll be able to update your script with any updates made to PHPCache.
 
 ## Deploying
