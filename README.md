@@ -46,7 +46,7 @@ Possible parameters include:
 
 ```php
 $cache = new PHPCache(
-	array('debug' = true, 'cacheDir' = 'cache', 'cacheTime' = 10)
+	array('debug' => true, 'cacheDir' => 'cache', 'cacheTime' => 10)
 );
 /**
  * @param  array $settings Associative array of caching settings
